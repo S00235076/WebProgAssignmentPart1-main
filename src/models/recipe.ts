@@ -8,6 +8,8 @@ export interface Recipe {
     category: string;
     ingredients : string;
     method: string;
+    dateJoined? : Date;
+    lastUpdated?: Date;
 }
 
 export const ValidateUser = (Recipe : Recipe) => {

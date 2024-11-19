@@ -19,7 +19,7 @@ content-type: application/json
    "category" : "Irish",
    "ingredients": "potatoes, beef, carrots, gravy",
    "method": "1. Prepare the beef 2. Boil the potatoes"
-   }
+}
  
 ###
 DELETE http://localhost:3001/api/v1/recipes/id1 HTTP/1.1

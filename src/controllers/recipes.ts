@@ -4,12 +4,12 @@ import {User, ValidateUser} from '../models/user'
 import { ObjectId} from 'mongodb';
 import Joi from 'joi';
 import { Recipe } from '../models/recipe';
-import {recipeCollection} from "../database";
+import {recipesCollection} from "../database";
 
 export const getRecipes =async  (req: Request, res: Response) => {
    
   try {
-   const recipes = (await recipeCollection.find({}).toArray()) as Recipe[];
+   const recipes = (await recipesCollection.find({}).toArray()) as Recipe[];
    res.status(200).json(recipes);
 
  } catch (error) {
@@ -51,26 +51,27 @@ export const createRecipe = async (req: Request, res: Response) => {
   // create a new user in the database
   try {
 
-    let validateResult : Joi.ValidationResult = ValidateUser(req.body)
+   // let validateResult : Joi.ValidationResult = ValidateUser(req.body)
 
-    if (validateResult.error) {
-      res.status(400).json(validateResult.error);
-      return;
-    }
+    // if (validateResult.error) {
+    //   res.status(400).json(validateResult.error);
+    //   return;
+    // }
    
 
-    const newUser = req.body as User;
+    const newRecipe = req.body as Recipe;
+    console.table(newRecipe)
 
-    newUser.dateJoined = new Date();
-    newUser.lastUpdated = new Date();
+    newRecipe.dateJoined = new Date();
+    newRecipe.lastUpdated = new Date();
 
-    const result = await usersCollection.insertOne(newUser)
+    const result = await recipesCollection.insertOne(newRecipe)
 
     if (result) {
         res.status(201)
         .location(`${result.insertedId}`)
         .json({message : 
-          `Created a new user with id ${result.insertedId}`})}
+          `Created a new recipe with id ${result.insertedId}`})}
         else {
         res.status(500).send("Failed to create a new recipe.");
         }
@@ -91,19 +92,20 @@ export const createRecipe = async (req: Request, res: Response) => {
 export const updateRecipe = async (req: Request, res: Response) => {
   // update a user in the database
 
- const {name, email, phonenumber } = req.body;
+ const {name, category, ingredients, method } = req.body;
 
   let id:string = req.params.id;
  
 
-  const newData: Partial<User> =
+  const newData: Partial<Recipe> =
   {
     lastUpdated: new Date(),
   }
 
   if (name) newData.name = name;
-  if(email) newData.email = email;
-  if (phonenumber) newData.phonenumber = phonenumber;
+  if(category) newData.category = category;
+  if (ingredients) newData.ingredients = ingredients;
+  if(method) newData.method = method;
 
   // still need to validate the data
 
@@ -113,9 +115,9 @@ export const updateRecipe = async (req: Request, res: Response) => {
     const result = await usersCollection.updateOne(query, {$set : newData});
 
     if (result.modifiedCount > 0) {
-      res.status(200).json({message : `Updated User`})}
+      res.status(200).json({message : `Updated recipe`})}
     else if (result.matchedCount = 0){
-      res.status(400).json({message: `Failed to update user.`});
+      res.status(400).json({message: `Failed to update recipe.`});
       }
       else 
       {
@@ -125,7 +127,7 @@ export const updateRecipe = async (req: Request, res: Response) => {
   catch (error) {
     if (error instanceof Error)
     {
-      console.log(`eror with ${error.message}`);
+      console.log(`error with ${error.message}`);
     }
     else {
       console.error(error);
