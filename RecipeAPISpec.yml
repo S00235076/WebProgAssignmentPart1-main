@@ -1,0 +1,134 @@
+openapi: '3.0.3'
+info:
+  title: Oran's api
+  version: '1.0'
+  description: Recipe API
+servers:
+  - url: http://localhost:3000/api/v1
+    description: The development server
+  - url: http://webprogassignmentpart1-1.onrender.com
+    description: the live demo  
+paths:
+  /recipes:
+    get:
+      description: Returns a list of all recipes
+      responses:
+        '200':
+          description: a list of all recipes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'  
+        '500':
+          description: Server Error
+    post:
+      description: Add a Recipe to favourites
+      parameters: []
+      requestBody:
+        description: Recipe object that needs to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Recipe'  
+      responses:
+        '201':
+          description: OK
+        '500':
+          description: Server error
+  /recipes/{recipeid}:
+    get:
+      description: 'gets a single recipe.'
+      parameters: 
+        - in: path
+          name: recipeid
+          required: true
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: user not found
+        '500':
+          description: Server error
+    delete:
+      description: 'deletes a single recipe.'
+      parameters: 
+        - in: path
+          name: recipeid
+          required: true
+          schema: 
+            type: string
+      responses:
+        '202':
+          description: successfully removed
+        '404':
+          description: recipe not found
+        '400':
+          description: found but not deleted
+        '500':
+          description: server error
+    put:
+      description: 'deletes a single recipe.'
+      parameters: 
+        - in: path
+          name: recipeid
+          required: true
+          schema: 
+            type: string
+      responses:
+        '202':
+          description: successfully removed
+        '404':
+          description: user not found
+        '400':
+          description: found but not deleted
+        '500':
+          description: server error
+      requestBody:
+        description: User object that needs to changed
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Recipe'  
+
+components:
+  schemas:
+    Recipe:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The recipe's name
+          example: "Pasta Carbonara"
+        recipeid:
+          type: string
+          description: The id of each recipe
+          example: 1
+        category:
+          type: string
+          description: The type of recipe
+          example: "Italian"
+        ingredients:
+          type: string
+          description: the ingredients needed
+          example: "bacon"
+        method:
+          type: string
+          description: how to make the recipe
+          example: "Put the pasta on to boil"
+      required:
+        - name
+        - recipeid
+        - category
+        - ingredients
+        - method
+    name:
+      type: object
+      properties:
+        property:
+          type: string

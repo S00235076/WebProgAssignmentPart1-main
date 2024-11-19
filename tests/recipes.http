@@ -1,0 +1,32 @@
+###
+### POST Request for a user 
+## Expected result is ........
+POST http://localhost:3001/api/v1/recipes HTTP/3.0
+content-type: application/json
+
+{  "_id": "1",
+   "name" : "Pasta Carbonara",
+   "category" : "Italian",
+   "ingredients": "patsa, bacon, cheese, cream",
+   "method": "1. Put the pasta on to boil 2. Cook the bacon"
+   }
+
+###
+PUT http://localhost:3001/api/v1/recipes/id1
+content-type: application/json
+
+{ "name" : " Irish stew",
+   "category" : "Irish",
+   "ingredients": "potatoes, beef, carrots, gravy",
+   "method": "1. Prepare the beef 2. Boil the potatoes"
+   }
+ 
+###
+DELETE http://localhost:3001/api/v1/recipes/id1 HTTP/1.1
+content-type: application/json
+
+
+###
+GET http://localhost:3001/api/v1/recipes HTTP/1.1
+content-type: application/json
+x-api-key: blahblah
