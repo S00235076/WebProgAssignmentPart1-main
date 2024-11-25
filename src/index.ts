@@ -4,6 +4,7 @@
 import express, {Application, Request, Response} from "express" ;
 import dotenv from "dotenv";
 import morgan from "morgan";
+import cors from 'cors';
 
 /* internal imports */
 
@@ -19,6 +20,7 @@ dotenv.config();
 
 app.use(morgan("tiny"));
 app.use(express.json());
+app.use (cors())
 
 //app.use(authenticateKey); - all the routes below
 
