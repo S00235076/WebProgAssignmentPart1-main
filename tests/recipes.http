@@ -12,7 +12,7 @@ content-type: application/json
    }
 
 ###
-PUT http://localhost:3001/api/v1/recipes/_id1
+PUT http://localhost:3001/api/v1/recipes/6761be000dd09722eb378588
 content-type: application/json
 
 { "name" : " Irish stew",
@@ -22,7 +22,7 @@ content-type: application/json
 }
  
 ###
-DELETE http://localhost:3001/api/v1/recipes/_id1 HTTP/1.1
+DELETE http://localhost:3001/api/v1/recipes/6761be000dd09722eb378588 HTTP/1.1
 content-type: application/json
 
 

@@ -112,7 +112,7 @@ export const updateRecipe = async (req: Request, res: Response) => {
   try {
 
     const query = { _id: new ObjectId(id) };
-    const result = await usersCollection.updateOne(query, {$set : newData});
+    const result = await recipesCollection.updateOne(query, {$set : newData});
 
     if (result.modifiedCount > 0) {
       res.status(200).json({message : `Updated recipe`})}
@@ -142,7 +142,7 @@ export const deleteRecipe = async (req: Request, res: Response) => {
   let id:string = req.params.id;
   try {
     const query = { _id: new ObjectId(id) };
-    const result = await usersCollection.deleteOne(query);
+    const result = await recipesCollection.deleteOne(query);
 
     if (result && result.deletedCount) {
         res.status(202).json({message :`Successfully removed recipe with id ${id}`});

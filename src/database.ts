@@ -4,11 +4,9 @@ import {User} from './models/user'
 import { Recipe } from "./models/recipe";
 
 
-
   dotenv.config();
 
   
-
   const connectionString : string  = process.env.DB_CONN_STRING || "mongodb+srv://s00235076:nonesense@ws4.agdwk.mongodb.net/?retryWrites=true&w=majority";
   const dbName : string = process.env.DB_NAME || "WS4";
   const client = new MongoClient(connectionString);
