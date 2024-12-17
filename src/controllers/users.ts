@@ -16,7 +16,7 @@ export const getUsers =async  (req: Request, res: Response) => {
   {
     console.log(`Error with get ${error.message}`)
   }
-   res.status(500).send("oppss");
+   res.status(500).send("oppssss");
  }
 };
 
