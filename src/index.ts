@@ -32,7 +32,7 @@ app.get("/ping", async (_req : Request, res: Response) => {
 
 
 app.get('/bananas', async (_req : Request, res: Response) =>
-  res.send('hello world, this is bananas - ha ha ha ha ha ha '));
+  res.send('hello world, this is bananas - ha ha ha ha ha  '));
 
 app.use('/api/v1/users',userRoutes)
 app.use('/api/v1/recipes',recipeRoutes)
