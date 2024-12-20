@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import Joi from 'joi';
 
+enum role {admin, editor, ''}
 
 export interface User {
     _id?: ObjectId;
@@ -11,7 +12,7 @@ export interface User {
     lastUpdated?: Date;
     password?: string;
     hashedPassword?: string;
-  
+    role?:role;
 }
 
 export const ValidateUser = (user : User) => {
@@ -21,7 +22,7 @@ export const ValidateUser = (user : User) => {
         phonenumber: Joi.string().min(10),
         email: Joi.string().email().required(),
         password: Joi.string().min(8).max(64).required(),
-    
+        role: Joi.string().valid(...Object.values(role))
     })
 
     return contactJoiSchema.validate(user);

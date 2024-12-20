@@ -74,6 +74,7 @@ export const createUser = async (req: Request, res: Response) => {
       phonenumber : req.body.phonenumber,
       dateJoined : new Date(),
       lastUpdated :new Date(),
+      role:req.body.role
     }
 
     newUser.hashedPassword = await argon2.hash(req.body.password)

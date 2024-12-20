@@ -48,15 +48,15 @@ export const getRecipeById = async (req: Request, res: Response) => {
 };
 
 export const createRecipe = async (req: Request, res: Response) => {
-  // create a new user in the database
-  try {
+   // create a new user in the database
+   try {
 
-   // let validateResult : Joi.ValidationResult = ValidateUser(req.body)
-
-    // if (validateResult.error) {
-    //   res.status(400).json(validateResult.error);
-    //   return;
-    // }
+    // let validateResult : Joi.ValidationResult = ValidateUser(req.body)
+ 
+     // if (validateResult.error) {
+     //   res.status(400).json(validateResult.error);
+     //   return;
+     // }
    
 
     const newRecipe = req.body as Recipe;

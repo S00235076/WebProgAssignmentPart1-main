@@ -7,13 +7,12 @@ content-type: application/json
 { 
    "name" : "Pasta Carbonara",
    "category" : "Italian",
-   "ingredients": "patsa, bacon, cheese, cream",
+   "ingredients": "pasta, bacon, cheese, cream",
    "method": "1. Put the pasta on to boil 2. Cook the bacon"
    }
 
 ###
-PUT http://localhost:3001/api/v1/recipes/6761be000dd09722eb378588
-content-type: application/json
+PUT http://localhost:3001/api/v1/recipes/67659b30a2820e38bb342cd3
 
 { "name" : " Irish Stew",
    "category" : "Irish",

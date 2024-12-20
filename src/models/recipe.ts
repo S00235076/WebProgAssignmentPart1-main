@@ -12,14 +12,14 @@ export interface Recipe {
     lastUpdated?: Date;
 }
 
-export const ValidateRecipes = (Recipe : Recipe) => {
+export const ValidateUser = (Recipe : Recipe) => {
 
-    const recipeJoiSchema = Joi.object<Recipe>({
+    const contactJoiSchema = Joi.object<Recipe>({
        name: Joi.string().min(3).required() ,
        category: Joi.string().min(10),
        ingredients: Joi.string().required(),
        method: Joi.string().required()    
     })
 
-    return recipeJoiSchema.validate(Recipe);
+    return contactJoiSchema.validate(Recipe);
 }

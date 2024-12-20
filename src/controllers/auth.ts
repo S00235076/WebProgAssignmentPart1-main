@@ -1,70 +1,95 @@
-import { Request, Response } from 'express'; // Import Request and Response to fix typing issues
+import { Request, Response } from 'express';
 import { usersCollection } from "../database";
 import * as argon2 from 'argon2';
-import { sign as jwtSign } from 'jsonwebtoken';
+import { sign as jwtSign, verify as jwtVerify } from 'jsonwebtoken'
 import { User } from '../models/user';
+import { ObjectId } from 'mongodb';
 
 export const handleLogin = async (req: Request, res: Response) => {
-  const email = req.body?.email;
-  const password = req.body?.password;
 
-  if (!email || !password) {
-    res
-      .status(400)
-      .json({ message: 'Email and password are required' });
-    return;
-  }
-
-  let user: User | null = null;
-  try {
-    user = await usersCollection.findOne({
-      email: email.toLowerCase(),
-    });
-  } catch (error) {
-    console.error(`Error finding user: ${error instanceof Error ? error.message : error}`);
-    res.status(500).json({ message: 'Internal server error' });
-    return;
-  }
-
-  const dummyPassword = 'dummy_password';
-  const dummyHash = await argon2.hash(dummyPassword);
-
-  // Use the user's hash if found, otherwise use the dummy hash
-  let userPasswordHash: string = user?.hashedPassword ?? dummyHash;
-
-  try {
-    // Check password
-    const isPasswordValid = await argon2.verify(userPasswordHash, password);
-
-    // If password is invalid, return unauthorized
-    if (!isPasswordValid || !user) {
-      res.status(401).json({
-        message: 'Invalid email or password!',
-      });
-      return;
+    const email = req.body?.email
+    
+    const password = req.body?.password
+  
+    if (!email || !password) {
+       res
+        .status(400)
+        .json({ message: 'Email and password are required' });
+        return;
     }
+      const user = await usersCollection.findOne({
+        email: email.toLowerCase(),
+      })
+  
+      const dummyPassword = 'dummy_password';
+      const dummyHash = await argon2.hash(dummyPassword);
+    
+      // Use the user's hash if found, otherwise use the dummy hash
+      
+     let userPasswordHash;
 
-    res.status(201).send({ accessToken: createAccessToken(user) });
-  } catch (error) {
-    console.error(`Error verifying password: ${error instanceof Error ? error.message : error}`);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
+      if (user && user.hashedPassword){
+       userPasswordHash =  user.hashedPassword;
+      }
+      else{
+         userPasswordHash = dummyHash;
+      }
+    
+      // check password
 
-const createAccessToken = (user: User | null): string => {
-  const secret = process.env.JWTSECRET || "not very secret";
-  const expiresTime = process.env.JWTEXPIRES || "60"; // Ensure JWTEXPIRES is treated as a string
+        const isPasswordValid = await argon2.verify(userPasswordHash, password);
+    
+    
+        // If password is invalid, return unauthorized
+        if (!isPasswordValid) {
+         res.status(401).json({
+            message: 'Invalid email or password!'
+          });
+          return;
+        }
 
-  const payload = {
-    email: user?.email,
-    name: user?.name,
-  };
+        res.status(201).send({ accessToken: createAccessToken(user) });
 
-  try {
-    const token = jwtSign(payload, secret, { expiresIn: parseInt(expiresTime, 10) }); // Parse expiresTime to ensure it's an integer
+      }
+
+const createAccessToken = (user: User | null) : string  => {
+
+    const secret = process.env.JWTSECRET || "not very secret";
+    const expiresTime = process.env.JWTEXPIRES || 60;
+    console.log(expiresTime);
+    const payload =
+    {
+        email: user?.email,
+        name: user?.name,
+        role: user?.role
+    }
+    const token = jwtSign(payload, secret, {expiresIn : expiresTime }); 
+
     return token;
-  } catch (error) {
-    console.error(`Error signing token: ${error instanceof Error ? error.message : error}`);
-    throw new Error('Failed to create access token');
+
+}
+
+export const deleteUser = async (req: Request, res: Response) => { 
+  
+  let id:string = req.params.id;
+  try {
+    const query = { _id: new ObjectId(id) };
+    const result = await usersCollection.deleteOne(query);
+
+    if (result && result.deletedCount) {
+        res.status(202).json({message :`Successfully removed user with id ${id}`});
+    } else if (!result) {
+        res.status(400).json({message: `Failed to remove user with id ${id}`});
+    } else if (!result.deletedCount) {
+        res.status(404).json({message: `no user fround with id ${id}`});
+    }
+} catch (error) {
+  if (error instanceof Error)
+   console.error(`eror with ${error.message}`);
+   else {
+    console.error(error);
   }
+  res.status(400).send(`Unable to delete user ${req.params.id}`);
+}
 };
+  
